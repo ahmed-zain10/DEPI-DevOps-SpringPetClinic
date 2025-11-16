@@ -1,11 +1,11 @@
-# 🚀 DEPI DevOps Track — Automated DevOps Pipeline for Spring PetClinic
+#  DEPI DevOps Track — Automated DevOps Pipeline for Spring PetClinic
 
 A complete end-to-end DevOps implementation for the **Spring PetClinic** application as part of the **Digital Egypt Pioneers Initiative (DEPI)** DevOps Track.  
 The project covers containerization, local environment setup, automation, cloud infrastructure, orchestration, and monitoring.
 
 ---
 
-## ⭐ Overview
+# Overview
 
 **Spring PetClinic** is a well-structured Java/Spring Boot application that makes it ideal for building and demonstrating real DevOps pipelines.  
 It includes:
@@ -31,7 +31,7 @@ This project applies modern DevOps practices to automate the lifecycle of the ap
 
 ---
 
-## 🏗️ Current Progress — Dockerization Complete
+##  Current Progress — Dockerization Complete
 
 ### ✔ Multi-Stage Dockerfile
 
@@ -50,7 +50,10 @@ WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
-🐳 Docker Compose Setup
+
+
+
+Docker Compose Setup
 This configuration spins up PostgreSQL + Spring PetClinic using the final production image from Docker Hub.
 
 yaml
@@ -85,6 +88,10 @@ services:
 
 volumes:
   postgres_data:
+
+
+
+
 ▶️ Running the Stack
 Start everything in detached mode:
 
