@@ -1,6 +1,6 @@
-# 🚀 DEPI DevOps Track: Automation for Spring PetClinic
+#  DEPI DevOps Track: Automation for Spring PetClinic
 
-## 🌟 Project Overview
+##  Project Overview
 
 This repository showcases a comprehensive, full-stack DevOps pipeline for the **Spring PetClinic** application, a standard web system used for managing veterinary clinic operations.
 
@@ -31,7 +31,7 @@ This project aims to implement **Continuous Integration, Delivery, and Monitorin
 
 ---
 
-## 🏗️ Current State: Dockerization Complete
+##  Current State: Dockerization Complete
 
 The application build and packaging pipeline is complete.  
 The Docker image has been successfully built and pushed to **Docker Hub**.
@@ -42,7 +42,7 @@ The Docker image has been successfully built and pushed to **Docker Hub**.
 
 Using an optimized **multi-stage build** to minimize final image size with a lightweight JRE runtime image.
 
-```dockerfile
+```Dockerfile
 # --- STAGE 1: Build ---
 # Use a Maven image to build the application .jar file
 FROM maven:3.8.5-openjdk-17 AS builder
@@ -73,11 +73,13 @@ EXPOSE 8080
 
 # Set the command to run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
+
+
 2️⃣ Docker Compose Configuration
 Defines the PostgreSQL database + Spring PetClinic application using the latest image from Docker Hub.
 
-yaml
-Copy code
+```docker compose
 services:
   # 1. PostgreSQL Database Service
   db:
@@ -110,11 +112,14 @@ services:
 
 volumes:
   postgres_data:
+
+
+```
+
 3️⃣ Running the Environment
 Start the PostgreSQL database + Spring PetClinic app in detached mode:
 
-bash
-Copy code
+
 docker compose up -d
 ✅ Verification
 Action	Command	Expected Result
