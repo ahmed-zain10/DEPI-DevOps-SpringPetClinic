@@ -49,3 +49,37 @@ out/
 _site/
 *.css
 !petclinic.css
+### Java/Maven ###
+target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Logs
+*.log
+*.log.*
+/logs/
+
+# Maven phase files
+pom.xml.tag
+pom.xml.next
+pom.xml.bak
+release.properties
+dependency-check-report.html
+dependency-check-report.xml
+
+# IDE (IntelliJ, Eclipse, VS Code)
+.idea
+.vscode
+*.iws
+*.iml
+*.ipr
+
+# Compilation artifacts
+*.class
+
+### Docker ###
+# Ignore the generated Docker Compose data volumes
+/postgres_data/
+
+# Ignore local .env files if used for secrets
+.env
