@@ -119,11 +119,11 @@ volumes:
 
 3️⃣ Running the Environment
 Start the PostgreSQL database + Spring PetClinic app in detached mode:
-```
+
 
 docker compose up -d
 ✅ Verification
 Action	Command	Expected Result
-Check containers	docker ps	Both petclinic_db_container and spring_petclinic_app are running (Up)
-Check application logs	docker logs spring_petclinic_app	Shows: Started PetClinicApplication...
-Access application	Open: http://localhost:8080	PetClinic landing page loads & connects to PostgreSQL
+Check containers	| docker ps	| Both petclinic_db_container and spring_petclinic_app are running (Up)
+Check application logs |	docker logs spring_petclinic_app |	Shows: Started PetClinicApplication...
+Access application	Open | http://localhost:8080 |	PetClinic landing page loads & connects to PostgreSQL
