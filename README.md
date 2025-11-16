@@ -120,8 +120,10 @@ volumes:
 3️⃣ Running the Environment
 Start the PostgreSQL database + Spring PetClinic app in detached mode:
 
-
+```
 docker compose up -d
+```
+
 ✅ Verification
 |Action |	Command	| Expected Result|
 |------|----------|----------------|
