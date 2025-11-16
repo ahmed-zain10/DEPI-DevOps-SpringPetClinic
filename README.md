@@ -56,8 +56,7 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 Docker Compose Setup
 This configuration spins up PostgreSQL + Spring PetClinic using the final production image from Docker Hub.
 
-yaml
-Copy code
+
 services:
   db:
     image: postgres:14-alpine
