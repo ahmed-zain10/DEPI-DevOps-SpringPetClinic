@@ -73,13 +73,14 @@ EXPOSE 8080
 
 # Set the command to run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
-
+```
 
 
 2️⃣ Docker Compose Configuration
 Defines the PostgreSQL database + Spring PetClinic application using the latest image from Docker Hub.
 
-```docker compose
+docker-compose.yml
+```
 services:
   # 1. PostgreSQL Database Service
   db:
@@ -118,7 +119,7 @@ volumes:
 
 3️⃣ Running the Environment
 Start the PostgreSQL database + Spring PetClinic app in detached mode:
-
+```
 
 docker compose up -d
 ✅ Verification
