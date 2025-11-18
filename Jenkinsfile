@@ -26,15 +26,10 @@ pipeline {
             }
         }
 
-        stage('Build Project with Maven') {
+        stage('Build with Maven') {
             steps {
-                sh "mvn clean package -DskipTests"
-            }
-        }
-
-        stage('Run Docker Compose') {
-            steps {
-                sh 'docker-compose up -d --build || true'
+                sh 'mvn -version'
+                sh 'mvn clean package -DskipTests'
             }
         }
 
