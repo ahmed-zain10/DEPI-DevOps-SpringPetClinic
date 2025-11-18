@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_CREDENTIALS = 'docker-hub-token'  // ID للكريدنشل في Jenkins
         IMAGE_NAME = 'ahmedzain10/spring-petclinic-prod'
         IMAGE_TAG = 'V1.1'
     }
@@ -14,7 +13,6 @@ pipeline {
                 checkout([$class: 'GitSCM',
                     branches: [[name: '*/main']],
                     doGenerateSubmoduleConfigurations: false,
-                    extensions: [],
                     userRemoteConfigs: [[
                         url: 'https://github.com/ahmed-zain10/DEPI-DevOps-SpringPetClinic.git',
                         credentialsId: 'github-credentials'
@@ -47,12 +45,9 @@ pipeline {
             }
         }
 
-        stage('Docker Login & Push') {
+        stage('Push Image to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                    sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
-                }
+                sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
             }
         }
     }
