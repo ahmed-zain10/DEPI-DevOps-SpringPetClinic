@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven-3.9'    // اسم الـ Maven من Global Tool Configuration
+    }
+
     environment {
         IMAGE_NAME = 'ahmedzain10/spring-petclinic-prod'
         IMAGE_TAG = 'V1.1'
@@ -25,7 +29,7 @@ pipeline {
             steps {
                 sh '''
                     command -v git >/dev/null 2>&1 || { echo "Git not installed"; exit 1; }
-                    command -v mvn >/dev/null 2>&1 || { echo "Maven not installed"; exit 1; }
+                    command -v mvn >/dev/null 2>&1 || { echo "Maven not installed from Jenkins Tool"; exit 1; }
                     command -v docker >/dev/null 2>&1 || { echo "Docker not installed"; exit 1; }
                     command -v docker-compose >/dev/null 2>&1 || { echo "Docker Compose not installed"; exit 1; }
                     echo "All required programs are installed."
