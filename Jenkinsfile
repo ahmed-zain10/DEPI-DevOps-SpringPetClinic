@@ -1,17 +1,27 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.9.3-eclipse-temurin-17' // Maven + JDK
-            args '-v $HOME/.m2:/root/.m2' // Cache dependencies
-        }
-    }
+    agent any
 
     environment {
         DOCKER_IMAGE = "ahmedzain10/spring-petclinic-prod"
-        DOCKER_TAG = "V1.1" // عدل الرقم حسب النسخة الجديدة
+        DOCKER_TAG = "V1.1"
     }
 
     stages {
+
+        stage('Checkout SCM') {
+            steps {
+                checkout([$class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/ahmed-zain10/DEPI-DevOps-SpringPetClinic.git',
+                        credentialsId: 'github-credentials'
+                    ]]
+                ])
+            }
+        }
+
         stage('Check Required Programs') {
             steps {
                 echo 'Checking required programs...'
@@ -27,39 +37,38 @@ pipeline {
         stage('Run Docker Compose') {
             steps {
                 echo 'Starting Docker Compose services...'
-                sh '''
-                    docker-compose down --remove-orphans || true
-                    docker-compose up -d
-                '''
+                sh 'docker-compose up -d --build'
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
-                sh '''
-                    docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} -t ${DOCKER_IMAGE}:latest .
-                '''
+                sh """
+                    docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
+                """
             }
         }
 
         stage('Push Docker Image') {
             steps {
                 echo 'Pushing Docker image to Docker Hub...'
-                sh '''
+                sh """
                     docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
-                    docker push ${DOCKER_IMAGE}:latest
-                '''
+                """
             }
         }
     }
 
     post {
-        success {
-            echo 'Pipeline completed successfully.'
+        always {
+            echo 'Pipeline finished.'
         }
         failure {
             echo 'Pipeline failed.'
+        }
+        success {
+            echo 'Pipeline completed successfully.'
         }
     }
 }
