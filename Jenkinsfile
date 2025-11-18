@@ -1,5 +1,5 @@
 pipeline {
-    agent any 
+    agent any
 
     environment {
         DOCKER_IMAGE = "ahmedzain10/spring-petclinic-prod"
@@ -11,10 +11,13 @@ pipeline {
     stages {
         stage('1. Build and Test') {
             agent {
-                docker { image 'maven:3.9.3-eclipse-temurin-17' }
+                docker { 
+                    image 'maven:3.9.2-eclipse-temurin-17' 
+                    args '-v $HOME/.m2:/root/.m2' // Cache Maven dependencies
+                }
             }
             steps {
-                echo 'Building Spring PetClinic application with Maven inside Docker...'
+                echo 'Building Spring PetClinic application with Maven...'
                 checkout scm
                 sh 'mvn clean package -DskipTests'
             }
