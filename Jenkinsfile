@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven-3.9'    // اسم الـ Maven من Global Tool Configuration
+        maven 'Maven-3.9'
     }
 
     environment {
@@ -16,7 +16,6 @@ pipeline {
             steps {
                 checkout([$class: 'GitSCM',
                     branches: [[name: '*/main']],
-                    doGenerateSubmoduleConfigurations: false,
                     userRemoteConfigs: [[
                         url: 'https://github.com/ahmed-zain10/DEPI-DevOps-SpringPetClinic.git',
                         credentialsId: 'github-credentials'
@@ -29,7 +28,7 @@ pipeline {
             steps {
                 sh '''
                     command -v git >/dev/null 2>&1 || { echo "Git not installed"; exit 1; }
-                    command -v mvn >/dev/null 2>&1 || { echo "Maven not installed from Jenkins Tool"; exit 1; }
+                    mvn -version || { echo "Maven is not working"; exit 1; }
                     command -v docker >/dev/null 2>&1 || { echo "Docker not installed"; exit 1; }
                     command -v docker-compose >/dev/null 2>&1 || { echo "Docker Compose not installed"; exit 1; }
                     echo "All required programs are installed."
@@ -53,15 +52,6 @@ pipeline {
             steps {
                 sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'Pipeline completed successfully.'
-        }
-        failure {
-            echo 'Pipeline failed.'
         }
     }
 }
