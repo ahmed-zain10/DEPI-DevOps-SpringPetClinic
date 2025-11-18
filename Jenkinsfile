@@ -1,4 +1,5 @@
 pipeline {
+
     agent {
         docker {
             image 'maven:3.9.6-eclipse-temurin-17'
@@ -25,15 +26,9 @@ pipeline {
             }
         }
 
-        stage('Check Required Programs') {
+        stage('Build Project with Maven') {
             steps {
-                sh '''
-                    command -v git >/dev/null 2>&1 || { echo "Git not installed"; exit 1; }
-                    mvn -version || { echo "Maven is not working inside Docker Agent"; exit 1; }
-                    command -v docker >/dev/null 2>&1 || { echo "Docker not installed"; exit 1; }
-                    command -v docker-compose >/dev/null 2>&1 || { echo "Docker Compose not installed"; exit 1; }
-                    echo "All required programs are installed."
-                '''
+                sh "mvn clean package -DskipTests"
             }
         }
 
