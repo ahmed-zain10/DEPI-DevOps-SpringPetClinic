@@ -3,27 +3,18 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "ahmedzain10/spring-petclinic-prod"
-        SSH_HOST = "your.ubuntu.host.ip" 
+        SSH_HOST = "your.ubuntu.host.ip"
         SSH_USER = "ubuntu_user"
         REMOTE_APP_DIR = "/opt/petclinic-app"
     }
 
     stages {
-        stage('0. Setup Environment') {
-            steps {
-                echo 'Installing Java 17 and Maven...'
-                sh '''
-                    sudo apt update
-                    sudo apt install -y openjdk-17-jdk maven
-                    java -version
-                    mvn -v
-                '''
-            }
-        }
-
         stage('1. Build and Test') {
+            agent {
+                docker { image 'maven:3.9.3-eclipse-temurin-17' }
+            }
             steps {
-                echo 'Building Spring PetClinic application with Maven...'
+                echo 'Building Spring PetClinic application with Maven inside Docker...'
                 checkout scm
                 sh 'mvn clean package -DskipTests'
             }
