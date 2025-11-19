@@ -25,7 +25,7 @@ This project aims to implement **Continuous Integration, Delivery, and Monitorin
 | **Local Environment** | Docker Compose | Run the full environment (App + DB) locally |
 | **Infrastructure as Code (IaC)** | Terraform & AWS | Define and provision cloud infrastructure |
 | **Configuration Mgmt.** | Ansible | Automate setup and configuration of hosts |
-| **Automation** | GitHub Actions | CI/CD pipeline for build, push, deploy |
+| **Automation** | Jenkins | CI/CD pipeline for build, push, deploy |
 | **Orchestration** | Kubernetes (K8s) | Scalable & highly available deployment |
 | **Monitoring** | Prometheus & Grafana | Metrics collection & dashboard visualization |
 
@@ -130,3 +130,108 @@ docker compose up -d
 |**Check containers**	| docker ps	| Both petclinic_db_container and spring_petclinic_app are running (Up)|
 |**Check application logs** |	docker logs spring_petclinic_app |	Shows: Started PetClinicApplication...|
 |**Access application	Open** | http://localhost:8080 |	PetClinic landing page loads & connects to PostgreSQL|
+
+
+
+4️⃣ Jenkins Pipeline for CI/CD
+
+This project includes a Jenkins declarative pipeline that automates the building, packaging, and deployment of the Spring PetClinic application with Docker.
+
+Pipeline Overview
+
+The pipeline performs the following automated steps:
+
+Checkout SCM
+
+Pulls the latest code from GitHub (main branch).
+
+Uses Jenkins credentials (github-credentials) for authentication.
+
+Run Docker Compose
+
+Stops any running containers (docker-compose down) safely.
+
+Builds and starts the PostgreSQL database and Spring PetClinic app (docker-compose up -d --build).
+
+Build Docker Image
+
+Creates a new Docker image for the application.
+
+Tags the image with the build number: ahmedzain10/spring-petclinic-prod:V<BUILD_NUMBER>.
+
+Push Docker Image to Docker Hub
+
+Authenticates to Docker Hub using the docker-hub-token credentials.
+
+Pushes the newly built image to Docker Hub for deployment or sharing.
+
+Jenkinsfile
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = 'ahmedzain10/spring-petclinic-prod'
+        IMAGE_TAG  = "V${env.BUILD_NUMBER}"
+        DOCKER_HUB_CREDENTIALS = 'docker-hub-token'
+    }
+
+    stages {
+
+        stage('Checkout SCM') {
+            steps {
+                checkout([$class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/ahmed-zain10/DEPI-DevOps-SpringPetClinic.git',
+                        credentialsId: 'github-credentials'
+                    ]]
+                ])
+            }
+        }
+
+        stage('Run Docker Compose') {
+            steps {
+                sh '''
+                docker-compose down || true
+                docker-compose up -d --build
+                '''
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+            }
+        }
+
+        stage('Push Image to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                    docker push ${IMAGE_NAME}:${IMAGE_TAG}
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Pipeline completed successfully. Image tag: ${IMAGE_TAG}"
+        }
+        failure {
+            echo 'Pipeline failed.'
+        }
+    }
+}
+
+Key Features
+
+Automated CI/CD: No manual steps required after initial Jenkins setup.
+
+Dynamic Docker Tags: Each build gets a unique version tag (V<BUILD_NUMBER>).
+
+Integrated with Docker Hub: Easy sharing and deployment of images.
+
+Local Environment Support: Works with docker-compose for local testing.
