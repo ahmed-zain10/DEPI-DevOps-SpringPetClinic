@@ -244,7 +244,53 @@ pipeline {
   -Local Environment Support: Works with docker-compose for local testing.
 
 
+**GitHub Webhook Integration**
 
+To automate the pipeline trigger on every code push, a GitHub webhook has been configured to notify Jenkins.
+
+*Steps Taken:*
+```
+# تحديث الحزم
+sudo apt update
+
+# تثبيت Node.js و npm
+sudo apt install nodejs npm -y
+
+# التأكد من النسخ
+node -v
+npm -v
+```
+
+Installed LocalTunnel to expose Jenkins running locally to the internet:
+```
+sudo npm install -g localtunnel
+```
+
+Started LocalTunnel to forward Jenkins port 8088:
+```
+lt --port 8088 --subdomain mypetclinic  
+```
+```
+#port 8088 is the port which jenkins works in.
+```
+
+This provided a public URL like:
+```
+https://mypetclinic.loca.lt
+```
+
+*Configured the GitHub repository webhook:*
+
+-Payload URL: https://mypetclinic.loca.lt/github-webhook/
+
+-Content type: application/json
+
+-Trigger: Just the push event
+
+-Active: Enabled
+
+-With this setup, any push to the main branch triggers the Jenkins pipeline automatically, building, pushing, and deploying 
+ the Docker image.
 
 
 
