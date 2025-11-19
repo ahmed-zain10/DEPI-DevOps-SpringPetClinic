@@ -15,7 +15,7 @@ services:
 
   # 2. خدمة التطبيق (سيتم استخدام هذه الصورة بعد البناء والدفع)
   app:
-    # **مهم: غير YOUR_DOCKERHUB_USERNAME باسم مستخدم Docker Hub الخاص بك**
+    # **مهم: غير اليوزر باسم مستخدم Docker Hub بتاعك**
     image: ahmedzain10/spring-petclinic-prod:V1.0
     container_name: spring_app_container
     restart: always
