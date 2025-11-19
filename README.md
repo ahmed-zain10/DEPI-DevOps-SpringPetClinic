@@ -142,31 +142,31 @@ This project includes a Jenkins declarative pipeline that automates the building
 
 **Pipeline Overview**
 
-  The pipeline performs the following automated steps:
+  *The pipeline performs the following automated steps:*
 
-    Checkout SCM
+    -Checkout SCM
 
-    Pulls the latest code from GitHub (main branch).
+    -Pulls the latest code from GitHub (main branch).
 
-    Uses Jenkins credentials (github-credentials) for authentication.
+    -Uses Jenkins credentials (github-credentials) for authentication.
 
-    Run Docker Compose
+    -Run Docker Compose
 
-    Stops any running containers (docker-compose down) safely.
+    -Stops any running containers (docker-compose down) safely.
 
-    Builds and starts the PostgreSQL database and Spring PetClinic app (docker-compose up -d --build).
+    -Builds and starts the PostgreSQL database and Spring PetClinic app (docker-compose up -d --build).
 
-    Build Docker Image
+    -Build Docker Image
 
-    Creates a new Docker image for the application.
+    -Creates a new Docker image for the application.
 
-    Tags the image with the build number: ahmedzain10/spring-petclinic-prod:V<BUILD_NUMBER>.
+    -Tags the image with the build number: ahmedzain10/spring-petclinic-prod:V<BUILD_NUMBER>.
 
-    Push Docker Image to Docker Hub
+    -Push Docker Image to Docker Hub
 
-    Authenticates to Docker Hub using the docker-hub-token credentials.
+    -Authenticates to Docker Hub using the docker-hub-token credentials.
 
-    Pushes the newly built image to Docker Hub for deployment or sharing.
+    -Pushes the newly built image to Docker Hub for deployment or sharing.
 
 
 
@@ -235,10 +235,10 @@ pipeline {
 ```
 **Key Features**
 
-  Automated CI/CD: No manual steps required after initial Jenkins setup.
+  -Automated CI/CD: No manual steps required after initial Jenkins setup.
 
-  Dynamic Docker Tags: Each build gets a unique version tag (V<BUILD_NUMBER>).
+  -Dynamic Docker Tags: Each build gets a unique version tag (V<BUILD_NUMBER>).
 
-  Integrated with Docker Hub: Easy sharing and deployment of images.
+  -Integrated with Docker Hub: Easy sharing and deployment of images.
 
-  Local Environment Support: Works with docker-compose for local testing.
+  -Local Environment Support: Works with docker-compose for local testing.
