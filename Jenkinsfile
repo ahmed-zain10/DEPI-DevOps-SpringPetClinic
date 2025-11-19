@@ -4,7 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = 'ahmedzain10/spring-petclinic-prod'
         IMAGE_TAG  = "V${env.BUILD_NUMBER}"   // كل build هيبقى له تاج جديد تلقائي
-        DOCKER_HUB_CREDENTIALS = 'docker-hub'  // استخدم الـ ID الصح هنا
+        DOCKER_HUB_CREDENTIALS = 'docker-hub-token'  // استخدم الـ ID الصح هنا
     }
 
     stages {
