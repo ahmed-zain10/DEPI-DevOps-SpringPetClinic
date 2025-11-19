@@ -280,6 +280,9 @@ https://mypetclinic.loca.lt
 ```
 
 *Configured the GitHub repository webhook:*
+GitHub:
+
+Settings → Webhooks → Add webhook
 
 -Payload URL: https://mypetclinic.loca.lt/github-webhook/
 
