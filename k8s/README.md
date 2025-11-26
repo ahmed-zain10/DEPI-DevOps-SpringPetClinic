@@ -8,16 +8,34 @@ This directory contains Kubernetes manifests to deploy the Spring PetClinic appl
 Deploys PostgreSQL database with:
 - **Secret**: Database credentials (`petuser`, `petpassword_secure`, `petclinic_db`)
 - **Service**: ClusterIP service exposing port 5432
-- **Deployment**: PostgreSQL 17.5 container
+- **Deployment**: PostgreSQL 17.5 container with:
+  - Resource limits (256Mi-512Mi RAM, 250m-500m CPU)
+  - Enhanced health probes (liveness, readiness, startup)
+  - Recreate deployment strategy for data integrity
 - **PersistentVolumeClaim**: 5Gi persistent storage for database data
 
 ### `petclinic.yml`
 Deploys the Spring PetClinic application with:
 - **Service**: NodePort service exposing the application (port 80 → 8080)
-- **Deployment**: Spring Boot application container
+- **Deployment**: Spring Boot application with:
   - Image: `ahmedzain10/spring-petclinic-prod:V1.0`
-  - Profile: `postgres`
-  - Health probes: Liveness and Readiness checks
+  - 2 replicas for high availability
+  - Resource limits (512Mi-1Gi RAM, 500m-1000m CPU)
+  - Rolling update strategy (zero downtime)
+  - Actuator health endpoints
+  - Prometheus metrics annotations
+
+### `configmap.yml`
+Application configuration:
+- Spring Boot properties
+- Logging levels
+- Actuator endpoints configuration
+
+### `hpa.yml` (Optional)
+HorizontalPodAutoscaler for auto-scaling:
+- Scales from 2 to 5 replicas
+- Based on CPU (70%) and Memory (80%) usage
+- Smart scale-up/down policies
 
 ## 🚀 Deployment Instructions
 
@@ -42,18 +60,30 @@ kubectl wait --for=condition=ready pod -l app=demo-db --timeout=60s
 kubectl get pods -l app=demo-db
 ```
 
-### Step 3: Deploy the Application
+### Step 3: Deploy Configuration (Optional)
+```bash
+kubectl apply -f k8s/configmap.yml
+```
+
+### Step 4: Deploy the Application
 ```bash
 kubectl apply -f k8s/petclinic.yml
 ```
 
-### Step 4: Verify Application is Running
+### Step 5: Deploy Auto-Scaling (Optional)
+```bash
+# Requires metrics-server to be installed
+kubectl apply -f k8s/hpa.yml
+```
+
+### Step 6: Verify Application is Running
 ```bash
 kubectl get pods -l app=petclinic
 kubectl get svc petclinic
+kubectl get hpa petclinic-hpa  # If HPA was deployed
 ```
 
-Wait until the pod status shows `1/1 READY`.
+Wait until pod status shows `2/2 READY` (2 replicas running).
 
 ## 🌐 Accessing the Application
 
@@ -119,14 +149,39 @@ kubectl describe pod -l app=petclinic
 kubectl describe pod -l app=demo-db
 ```
 
-### Scale the Application
+### Scale the Application (Manual)
 ```bash
+# Manual scaling (if HPA not enabled)
 kubectl scale deployment petclinic --replicas=3
+```
+
+### Monitor Auto-Scaling
+```bash
+# Watch HPA in action
+kubectl get hpa petclinic-hpa --watch
+
+# Check resource usage
+kubectl top pods
+kubectl top nodes
+```
+
+### Check Actuator Endpoints
+```bash
+# Forward port
+kubectl port-forward svc/petclinic 8080:80
+
+# Health endpoints
+curl http://localhost:8080/actuator/health
+curl http://localhost:8080/actuator/health/liveness
+curl http://localhost:8080/actuator/health/readiness
+curl http://localhost:8080/actuator/metrics
 ```
 
 ### Delete All Resources
 ```bash
+kubectl delete -f k8s/hpa.yml
 kubectl delete -f k8s/petclinic.yml
+kubectl delete -f k8s/configmap.yml
 kubectl delete -f k8s/db.yml
 ```
 
