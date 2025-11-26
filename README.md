@@ -31,10 +31,13 @@ This project aims to implement **Continuous Integration, Delivery, and Monitorin
 
 ---
 
-##  Current State: Dockerization Complete
+##  Current State: Production-Ready Deployment ✅
 
-The application build and packaging pipeline is complete.  
-The Docker image has been successfully built and pushed to **Docker Hub**.
+The complete DevOps pipeline is implemented and operational:
+- ✅ **Docker**: Multi-stage builds with optimized images on Docker Hub
+- ✅ **CI/CD**: Automated Jenkins pipeline with GitHub webhooks  
+- ✅ **Kubernetes**: Production deployment with auto-scaling and high availability
+- ✅ **IaC**: Terraform configurations for AWS cloud infrastructure
 
 ---
 
@@ -295,6 +298,91 @@ Settings → Webhooks → Add webhook
 -With this setup, any push to the main branch triggers the Jenkins pipeline automatically, building, pushing, and deploying 
  the Docker image.
 
+---
 
+## 5️⃣ Kubernetes Deployment (Production-Ready)
+
+The application is deployed on Kubernetes with enterprise-grade features for high availability, auto-scaling, and zero-downtime updates.
+
+### 🎯 Key Features
+
+| Feature | Implementation | Benefit |
+|---------|---------------|---------|
+| **High Availability** | 2 pod replicas | Zero downtime, fault tolerance |
+| **Auto-Scaling** | HPA (2-5 pods) | Automatic scaling based on CPU/Memory |
+| **Resource Management** | CPU/Memory limits | Prevents resource exhaustion |
+| **Health Monitoring** | Liveness/Readiness/Startup probes | Self-healing capabilities |
+| **Rolling Updates** | Zero downtime strategy | Seamless deployments |
+| **Persistent Storage** | 5Gi PVC for PostgreSQL | Data survives pod restarts |
+| **Configuration** | ConfigMap | Centralized application settings |
+| **Monitoring** | Prometheus annotations | Observability ready |
+
+### 📦 Kubernetes Components
+
+**Database (`k8s/db.yml`):**
+- PostgreSQL 17.5 with persistent storage
+- Resource limits: 256Mi-512Mi RAM, 250m-500m CPU
+- Enhanced health probes for reliability
+- Secure credential management via Secrets
+
+**Application (`k8s/petclinic.yml`):**
+- Spring Boot app with 2 replicas
+- Resource limits: 512Mi-1Gi RAM, 500m-1000m CPU
+- Actuator-based health endpoints
+- Rolling update strategy (maxUnavailable: 0)
+- NodePort service for external access
+
+**Auto-Scaling (`k8s/hpa.yml`):**
+- Scales from 2 to 5 replicas
+- CPU threshold: 70%
+- Memory threshold: 80%
+- Smart scale-up/down policies
+
+**Configuration (`k8s/configmap.yml`):**
+- Application properties
+- Logging configuration
+- Actuator endpoint settings
+
+### 🚀 Quick Deploy
+
+```bash
+# Deploy database
+kubectl apply -f k8s/db.yml
+
+# Deploy application
+kubectl apply -f k8s/petclinic.yml
+
+# Deploy auto-scaling (optional)
+kubectl apply -f k8s/hpa.yml
+
+# Access the application
+minikube service petclinic
+```
+
+**Detailed instructions available in:** [`k8s/README.md`](k8s/README.md)
+
+---
+
+## 🎉 Project Completion Status
+
+| Component | Status | Details |
+|-----------|--------|---------|
+| ✅ **Containerization** | Complete | Multi-stage Docker build |
+| ✅ **Docker Compose** | Complete | Local development environment |
+| ✅ **CI/CD Pipeline** | Complete | Jenkins with GitHub webhooks |
+| ✅ **Docker Registry** | Complete | Images on Docker Hub |
+| ✅ **Kubernetes** | Complete | Production-ready with HPA |
+| ✅ **Infrastructure as Code** | Complete | Terraform for AWS deployment |
+| 🔄 **Monitoring** | Planned | Prometheus & Grafana setup |
+
+---
+
+## 📚 Documentation
+
+- **Main Project**: [`README.md`](README.md) (This file)
+- **Kubernetes**: [`k8s/README.md`](k8s/README.md) - Detailed K8s deployment guide
+- **Terraform**: [`terraform/Readme.md`](terraform/Readme.md) - AWS infrastructure setup
+
+---
 
 <!-- This Is A Test For The Pipeline -->
