@@ -1,5 +1,5 @@
 services:
-  # 1. خدمة قاعدة البيانات
+  # 1. DataBase
   db:
     image: postgres:14-alpine
     container_name: postgres_db_container
@@ -13,16 +13,16 @@ services:
     ports:
       - "5432:5432"
 
-  # 2. خدمة التطبيق (سيتم استخدام هذه الصورة بعد البناء والدفع)
+  # 2. App
   app:
-    # **مهم: غير اليوزر باسم مستخدم Docker Hub بتاعك**
+    
     image: ahmedzain10/spring-petclinic-prod:V1.0
     container_name: spring_app_container
     restart: always
     ports:
       - "8080:8080"
     environment:
-      # تأكد أن إعدادات Spring Boot تطابق هذه المتغيرات
+    
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/petclinic_db
       SPRING_DATASOURCE_USERNAME: petuser
       SPRING_DATASOURCE_PASSWORD: petpassword_secure
